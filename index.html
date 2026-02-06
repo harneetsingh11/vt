@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Will You Be My Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #e63946;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #e63946;
+      color: white;
+    }
+
+    #noBtn {
+      background: #adb5bd;
+      color: #333;
+      position: absolute;
+    }
+
+    /* Fireworks */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    .hidden { display: none; }
+
+    .photo {
+      max-width: 300px;
+      border-radius: 20px;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page 1 -->
+  <div class="card" id="page1">
+    <h1>Hey Kratika Baby My One and only love ❤️</h1>
+    <h1>Will you be my Valentine? ❤️</h1>
+    <button id="yesBtn">Yes 😍</button>
+    <button id="noBtn">No 🙈</button>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="card hidden" id="page2">
+    <h1>💕 Thanks for choosing me as your Valentine, Kratika baby — I feel lucky already 😉💕 </h1>
+    <p>💖 Forever us 💖</p>
+    <!-- Replace with your image -->
+    <img src="./image.jpg" alt="Our Photo" class="photo" />
+  </div>
+
+  <canvas id="fireworks"></canvas>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+
+    // Move NO button on hover
+    noBtn.addEventListener('mouseenter', () => {
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 50);
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+    });
+
+    // YES button click
+    yesBtn.addEventListener('click', () => {
+      page1.classList.add('hidden');
+      page2.classList.remove('hidden');
+      startFireworks();
+    });
+
+    // Fireworks animation
+    function startFireworks() {
+      canvas.style.display = 'block';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = [];
+
+      function createFirework() {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height / 2;
+        const count = 50;
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x,
+            y,
+            vx: Math.cos((Math.PI * 2 * i) / count) * (Math.random() * 3 + 2),
+            vy: Math.sin((Math.PI * 2 * i) / count) * (Math.random() * 3 + 2),
+            life: 100
+          });
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, index) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.life--;
+          ctx.fillStyle = 'rgba(255,215,0,0.8)';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.life <= 0) particles.splice(index, 1);
+        });
+        requestAnimationFrame(animate);
+      }
+
+      setInterval(createFirework, 700);
+      animate();
+    }
+  </script>
+</body>
+</html>
